@@ -1,5 +1,6 @@
 package com.example.networkapp
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -15,6 +16,8 @@ import com.android.volley.toolbox.Volley
 import com.squareup.picasso.Picasso
 import org.json.JSONObject
 import java.io.*
+import android.net.Uri
+import android.provider.Settings
 
 
 class MainActivity : AppCompatActivity() {
@@ -48,6 +51,24 @@ class MainActivity : AppCompatActivity() {
         }
         if (file.exists()){
             loadComic()
+        }
+        if(intent.action == Intent.ACTION_VIEW) {
+            intent.data?.path?.run {
+                downloadComic(replace("/",""))
+            }
+        }
+
+        findViewById<Button>(R.id.button).setOnClickListener {
+            try{
+                val intent = Intent(
+                    Settings.ACTION_APP_OPEN_BY_DEFAULT_SETTINGS,
+                    Uri.parse("package:${packageName}")
+                )
+                startActivity(intent)
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+            }
+
         }
 
     }
